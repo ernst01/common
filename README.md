@@ -1,9 +1,6 @@
 # common
-A collection of Go packages I regularly use.
+A collection of Go packages.
 
 ## Response
 
-The `reponse` package helps formatting Rest API responses.
-
-
-
+The `response` package helps formatting Rest API responses.
