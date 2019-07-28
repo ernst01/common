@@ -47,6 +47,7 @@ func SendError(w http.ResponseWriter, httpStatus int, format string, a ...interf
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	http.Error(w, string(jsonError), httpStatus)
 }
 
