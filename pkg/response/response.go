@@ -9,13 +9,11 @@ import (
 	"strings"
 )
 
-// AppError represents an application error object
-type AppError struct {
+type appError struct {
 	Type    string `json:"type"`
 	Status  string `json:"status"`
 	Code    int    `json:"code"`
 	Message string `json:"message"`
-	HelpURL string `json:"help_url,omitempty"`
 }
 
 // SendSuccess sends a success response
@@ -38,7 +36,7 @@ func SendSuccess(w http.ResponseWriter, httpStatus int, data interface{}) {
 
 // SendError sends an error
 func SendError(w http.ResponseWriter, httpStatus int, format string, a ...interface{}) {
-	errorObj := AppError{
+	errorObj := &appError{
 		Type:    "error",
 		Status:  slugify(http.StatusText(httpStatus)),
 		Message: fmt.Sprintf(format, a...),
