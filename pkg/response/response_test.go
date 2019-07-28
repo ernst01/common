@@ -1,6 +1,7 @@
 package response_test
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -26,5 +27,25 @@ func TestSendSuccess(t *testing.T) {
 	}
 	if "something_in_writing" != string(body) {
 		t.Errorf("TestSendSuccess() body error: expected %s received %s", "something_in_writing", string(body))
+	}
+}
+
+func TestSendError(t *testing.T) {
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		response.SendError(w, http.StatusNotFound, "Unable to find a record matching ID: %d", 12)
+	}
+
+	req := httptest.NewRequest("GET", "http://example.com/foo", nil)
+	w := httptest.NewRecorder()
+	handler(w, req)
+
+	resp := w.Result()
+	body, _ := ioutil.ReadAll(resp.Body)
+
+	if http.StatusNotFound != resp.StatusCode {
+		t.Errorf("TestSendSuccess() StatusCode error: expected %d received %d", http.StatusNotFound, resp.StatusCode)
+	}
+	if !json.Valid(body) {
+		t.Errorf("TestSendSuccess() body error: Invalid JSON")
 	}
 }
